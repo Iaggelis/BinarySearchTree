@@ -224,7 +224,7 @@ class smartBST
     };
     std::shared_ptr<Node> root;
 
-    void addHelper(std::shared_ptr<Node> &root, T val)
+    void addHelper(std::shared_ptr<Node> &root, const T &val)
     {
         std::shared_ptr<Node> current = root;
         std::shared_ptr<Node> parent = nullptr;
@@ -257,6 +257,57 @@ class smartBST
         }
     }
 
+    bool deleteValueHelper(std::shared_ptr<Node> parent, std::shared_ptr<Node> current, T val)
+    {
+        if (!current)
+        {
+            return false;
+        }
+
+        if (current->value == val)
+        {
+            if (current->left == nullptr || current->right == nullptr)
+            {
+                auto temp = current->left;
+                if (current->right)
+                {
+                    temp = current->right;
+                }
+
+                if (parent)
+                {
+                    if (parent->left == current)
+                    {
+                        parent->left = temp;
+                    }
+                    else
+                    {
+                        parent->right = temp;
+                    }
+                }
+                else
+                {
+                    this->root = temp;
+                }
+            }
+            else
+            {
+                auto validSubs = current->right;
+                while (validSubs->left)
+                {
+                    validSubs = validSubs->left;
+                }
+                T temp = current->value;
+                current->value = validSubs->value;
+                validSubs->value = temp;
+                return deleteValueHelper(current, current->right, temp);
+            }
+            return true;
+        }
+        return (deleteValueHelper(current, current->left, val) ||
+                deleteValueHelper(current, current->right, val));
+    }
+
     size_t sizeHelper(std::shared_ptr<Node> &x)
     {
         return x == nullptr ? 0 : 1 + sizeHelper(x->left) + sizeHelper(x->right);
@@ -264,6 +315,37 @@ class smartBST
     size_t heightHelper(std::shared_ptr<Node> &x)
     {
         return x == nullptr ? 0 : 1 + std::max(heightHelper(x->left), heightHelper(x->right));
+    }
+
+    void printHelper(std::shared_ptr<Node> &x)
+    {
+        if (x)
+        {
+            printHelper(x->left);
+            std::cout << x->value << " ";
+            printHelper(x->right);
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    void printMaxPathHelper(std::shared_ptr<Node> &x)
+    {
+        if (!x)
+        {
+            return;
+        }
+        std::cout << x->value << " ";
+        if (heightHelper(x->left) > heightHelper(x->right))
+        {
+            printMaxPathHelper(x->left);
+        }
+        else
+        {
+            printMaxPathHelper(x->right);
+        }
     }
 
   public:
@@ -288,5 +370,20 @@ class smartBST
         {
             root = std::make_shared<Node>(val);
         }
+    }
+
+    bool deleteValue(T val)
+    {
+        return this->deleteValueHelper(nullptr, this->root, val);
+    }
+
+    void print()
+    {
+        printHelper(this->root);
+    }
+
+    void printMaxPath()
+    {
+        printMaxPathHelper(this->root);
     }
 };

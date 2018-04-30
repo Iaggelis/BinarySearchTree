@@ -22,9 +22,9 @@ int main()
     cout << "Max path: ";
     bst->printMaxPath();
     cout << endl;
-    // bst->deleteValue(11);
-    // cout << "11 removed: ";
-    // bst->print();
+    bst->deleteValue(11);
+    cout << "11 removed: ";
+    bst->print();
     // cout << endl;
     // cout << "1 removed: ";
     // bst->deleteValue(1);
@@ -45,7 +45,7 @@ int main()
     // cout << "100 removed: ";
     // bst->deleteValue(100);
     // bst->print();
-    // cout << endl;
+    cout << endl;
 
     cout << " smart Tree:" << endl;
     smartBST<int> tree;
@@ -53,10 +53,21 @@ int main()
     tree.insert(1);
     tree.insert(6);
     tree.insert(-1);
-    tree.insert(10);
+    tree.insert(-10);
     tree.insert(100);
 
-    cout << tree.size() << "\t" << tree.height() << endl;
-
+    tree.print();
+    cout << endl;
+    cout << "Nodes count: " << tree.size();
+    cout << endl;
+    cout << "Height: " << tree.height();
+    cout << endl;
+    cout << "Max path: ";
+    tree.printMaxPath();
+    cout << endl;
+    tree.deleteValue(11);
+    cout << "11 removed: ";
+    tree.print();
+    cout << endl;
     return 0;
 }
