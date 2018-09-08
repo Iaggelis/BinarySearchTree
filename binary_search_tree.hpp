@@ -1,7 +1,11 @@
 #pragma once
 
 #include <cmath>
+#include <climits>
 #include <memory>
+#include <stack>
+
+constexpr int INF = INT_MAX;
 
 template <class T>
 class BST
@@ -287,7 +291,7 @@ class smartBST
                 }
                 else
                 {
-                    this->root = temp;
+                    root = temp;
                 }
             }
             else
@@ -348,6 +352,17 @@ class smartBST
         }
     }
 
+    void traversal_inorder_helper(std::shared_ptr<Node> &x)
+    {
+        if (x == nullptr)
+        {
+            return;
+        }
+        traversal_inorder_helper(x->left);
+        std::cout << x->value << std::endl;
+        traversal_inorder_helper(x->right);
+    }
+
   public:
     smartBST() {}
     size_t size()
@@ -374,16 +389,53 @@ class smartBST
 
     bool deleteValue(T val)
     {
-        return this->deleteValueHelper(nullptr, this->root, val);
+        return this->deleteValueHelper(nullptr, root, val);
     }
 
     void print()
     {
-        printHelper(this->root);
+        printHelper(root);
     }
 
     void printMaxPath()
     {
-        printMaxPathHelper(this->root);
+        printMaxPathHelper(root);
+    }
+
+    void traversal_inorder_recursive()
+    {
+        traversal_inorder_helper(root);
+    }
+
+    void traversal_inorder_iterative()
+    {
+        if (!root)
+        {
+            return;
+        }
+
+        std::stack<std::shared_ptr<Node>> traversal;
+        std::shared_ptr<Node> current = root;
+        bool complete = false;
+
+        while (!complete)
+        {
+            if (current != nullptr)
+            {
+                traversal.push(current);
+                current = current->left;
+            }
+            else if (!traversal.empty())
+            {
+                current = traversal.top();
+                traversal.pop();
+                std::cout << current->value << std::endl;
+                current = current->right;
+            }
+            else
+            {
+                complete = true;
+            }
+        }
     }
 };
